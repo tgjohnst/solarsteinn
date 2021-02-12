@@ -73,7 +73,11 @@ Ansible?
 
 use LGSM for deployment? https://linuxgsm.com/lgsm/vhserver/
 
-#### Necessary scripts
+use an existing docker deployment? https://github.com/lloesche/valheim-server-docker (or many others)
+
+Nimdy's installation? https://github.com/Nimdy/Dedicated_Valheim_Server_Script
+
+#### Necessary scripts if building myself
 
 - From controller
   - Start instance
