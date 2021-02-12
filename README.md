@@ -1,2 +1,49 @@
-# solarsteinn
-Sólarsteinn is a framework for running a Valheim dedicated server on the cloud (AWS Spot)
+# Sólarsteinn
+Sólarsteinn is a framework for running a Valheim dedicated server on the public cloud (AWS Spot)
+
+## Goals: 
+The goal is to get an affordable, automated, and stable dedicated server running on public clouds that competes in cost with dedicated server offerings from game companies. 
+- Cost the same or less than equivalent dedicated servers from game hosting companies
+- Stably support up to 10 players for a reasonable amount of playtime (~8h) per day
+- Have some mechanism to backup data on a regular basis
+- Require little to no no human interaction to maintain once set up
+  - Update on a regular basis
+  - Handle service interruptions gracefully (especially with spot/pre-emptible instances)
+- Automate part-time uptime
+
+## Current competing offerings:
+*TODO make this into a table*
+- CitadelServers
+- SecretServers
+- GPortal
+- GTXgaming
+
+## Instance types
+Valheim dedicated server requires at least 2 CPUs and 4GB RAM. 
+- Is a t2.medium sufficient?
+  - With 4.42h of CPU burst credits per day, will we hit burst limit?
+    - What is baseline CPU usage like? Some users report 100% utilization of a single core as baseline
+- How does resource impact scale with # of players?
+- Hard drive space ($0.10/GB/mo 
+  - 2GB baseline for server installation, how does this scale/grow with world exploration
+  - How much breathing room for updates? Does steamcmd purge old files?
+- Region
+  - Which west coast region has the best spot pricing for relevant instances? 
+  - How much does ping matter - do we go usw2 by default just to optimize connectivity?
+- IP
+  - Need a static IP attached to the server at each boot so that users don't have to rotate
+ 
+## Architecture
+### Containerization vs. static volume
+#### Containers
+- May be annoying to update
+- Carry additional performance/space overhead. 
+- Easier to migrate to other services/hosts
+- Easier to orchestrate through pre-emptions/downtime without custom devops scripting.
+
+#### Static volume attached to instance
+- Easy to attach/detach 
+- Easy to snapshot for backups
+- Tied to AWS, harder to migrate to a new server
+
+### Control scheme
