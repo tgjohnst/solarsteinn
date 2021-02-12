@@ -77,6 +77,8 @@ use an existing docker deployment? https://github.com/lloesche/valheim-server-do
 
 Nimdy's installation? https://github.com/Nimdy/Dedicated_Valheim_Server_Script
 
+https://aws.amazon.com/about-aws/whats-new/2020/01/amazon-ec2-spot-instances-stopped-started-similar-to-on-demand-instances/
+
 #### Necessary scripts if building myself
 
 - From controller
