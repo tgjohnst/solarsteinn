@@ -13,7 +13,7 @@ This server should:
   - Handle service interruptions gracefully (especially with spot/pre-emptible instances)
 - Automate part-time uptime
 
-## Current competing STC offerings:
+## Current competing STC/STG offerings:
 *TODO make this into a table*
 - CitadelServers
 - SecretServers
