@@ -71,6 +71,8 @@ Valheim dedicated server requires at least 2 CPUs and 4GB RAM.
 
 Ansible?
 
+use LGSM for deployment? https://linuxgsm.com/lgsm/vhserver/
+
 #### Necessary scripts
 
 - From controller
