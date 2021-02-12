@@ -2,7 +2,9 @@
 Sólarsteinn is a framework for running a Valheim dedicated server on the public cloud (AWS Spot)
 
 ## Goals: 
-The goal is to get an affordable, automated, and stable dedicated server running on public clouds that competes in cost with dedicated server offerings from game companies. 
+The goal is to get an affordable, automated, and stable dedicated server running on public clouds that competes in cost with dedicated server offerings from game companies. It's relatively easy to get a dedicated server set up on a unix host, but on-demand pricing for a capable enough server is high ($40+ a month). One way to get around that is to use spot instances, which vary in price based on bids on extra capacity. For a spot-based server, the server has to gracefully handle shutdowns and restarts.
+
+This server should:
 - Cost the same or less than equivalent dedicated servers from game hosting companies
 - Stably support up to 10 players for a reasonable amount of playtime (~8h) per day
 - Have some mechanism to backup data on a regular basis
@@ -11,12 +13,15 @@ The goal is to get an affordable, automated, and stable dedicated server running
   - Handle service interruptions gracefully (especially with spot/pre-emptible instances)
 - Automate part-time uptime
 
-## Current competing offerings:
+## Current competing STC offerings:
 *TODO make this into a table*
 - CitadelServers
 - SecretServers
 - GPortal
 - GTXgaming
+
+## Cost components
+
 
 ## Instance types
 Valheim dedicated server requires at least 2 CPUs and 4GB RAM. 
