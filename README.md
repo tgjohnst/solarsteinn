@@ -21,7 +21,11 @@ This server should:
 - GTXgaming
 
 ## Cost components
-
+Compute instance uptime
+EBS (hard drive) capacity
+Snapshot (backup) storage
+Network throughput (data transfer)
+Elastic IP
 
 ## Instance types
 Valheim dedicated server requires at least 2 CPUs and 4GB RAM. 
