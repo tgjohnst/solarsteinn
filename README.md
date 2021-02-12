@@ -32,9 +32,12 @@ Actual cost to run the server is more than just server uptime itself.
 
 ## Instance types
 Valheim dedicated server requires at least 2 CPUs and 4GB RAM. 
-- Is a t2.medium sufficient?
+
+- Is a tX.medium sufficient?
   - With 4.42h of CPU burst credits per day, will we hit burst limit?
     - What is baseline CPU usage like? Some users report 100% utilization of a single core as baseline
+  - definitely t3 over t2 for this region
+  - If we upgrade, do we go for a tX.large (burst limited) or a cX.large (unlimited)
 - How does resource impact scale with # of players?
 - Hard drive space ($0.10/GB/mo 
   - 2GB baseline for server installation, how does this scale/grow with world exploration
@@ -44,7 +47,11 @@ Valheim dedicated server requires at least 2 CPUs and 4GB RAM.
   - How much does ping matter - do we go usw2 by default just to optimize connectivity?
 - IP
   - Need a static IP attached to the server at each boot so that users don't have to rotate
- 
+
+![spot](images/ec2_spot_avgs_usw2_210212.jpg)
+
+
+
 ## Architecture
 ### Containerization vs. static volume
 #### Containers
@@ -59,3 +66,25 @@ Valheim dedicated server requires at least 2 CPUs and 4GB RAM.
 - Tied to AWS, harder to migrate to a new server
 
 ### Control scheme
+
+#### Orchestration/configuration
+
+Ansible?
+
+#### Necessary scripts
+
+- From controller
+  - Start instance
+  - Stop instance
+  - Attach and mount EBS
+- On server
+  - Initial installation helpers (optional)
+    - Install server components
+    - Install world from existing save
+    - Swap between multiple worlds? (bonus feature - config file?)
+  - Start server
+  - Save world
+  - Take down server
+  - Update server
+  - Wrapper: save world, take down (pre-emption response)
+  - Wrapper: save world, take down, update, start (update)
