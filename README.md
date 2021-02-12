@@ -24,6 +24,8 @@ This server should:
 Actual cost to run the server is more than just server uptime itself.
 - Compute instance uptime
 - EBS (hard drive) capacity
+  - Root volume
+  - Detachable (persistent) game volume
 - Snapshot (backup) storage
 - Network throughput (data transfer)
 - Elastic IP
