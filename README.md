@@ -57,6 +57,7 @@ Valheim dedicated server requires at least 2 CPUs and 4GB RAM.
 ### Containerization vs. static volume
 #### Containers
 - May be annoying to update
+- I don't like docker ughhhhh but I guess I should
 - Carry additional performance/space overhead. 
 - Easier to migrate to other services/hosts
 - Easier to orchestrate through pre-emptions/downtime without custom devops scripting.
@@ -65,12 +66,13 @@ Valheim dedicated server requires at least 2 CPUs and 4GB RAM.
 - Easy to attach/detach 
 - Easy to snapshot for backups
 - Tied to AWS, harder to migrate to a new server
+- Base AMI will have to be routinely updated with dependencies (necessitating packer and $$ for AMI storage)
 
 #### Static root volume
 
 - Easiest to set up
 - Snapshottable
-- Harder to migrate/backup in case of e.g. changing to new spot
+- Harder to migrate, necessitating new setups
 
 ### Control scheme
 
