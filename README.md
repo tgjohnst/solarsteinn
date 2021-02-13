@@ -33,15 +33,16 @@ Actual cost to run the server is more than just server uptime itself.
 ## Instance types
 Valheim dedicated server requires at least 2 CPUs and 4GB RAM. 
 
-- Is a tX.medium sufficient?
-  - With 4.42h of CPU burst credits per day, will we hit burst limit?
+- Is a tX.medium sufficient? Probably not
+  - With 4 or 7h of CPU burst credits per day, will we hit burst limit?
     - What is baseline CPU usage like? Some users report 100% utilization of a single core as baseline
-  - definitely t3 over t2 for this region
-  - If we upgrade, do we go for a tX.large (burst limited) or a cX.large (unlimited)
+    - Users are reporting on reddit that they quickly hit the burst limit and are throttled to 20%
+  - If we upgrade, do we go for a cX.large (2CPUx4GB) or a mX.large (2CPUx8GB) - roughly the same price, slightly better cpu in the C series. Probably the mX
 - How does resource impact scale with # of players?
-- Hard drive space ($0.10/GB/mo 
+- Hard drive space ($0.10/GB/mo)
   - 2GB baseline for server installation, how does this scale/grow with world exploration
   - How much breathing room for updates? Does steamcmd purge old files?
+  - Can grow a volume but not easily shrink it (especially in the context of spot instances) - start small
 - Region
   - Which west coast region has the best spot pricing for relevant instances? 
   - How much does ping matter - do we go usw2 by default just to optimize connectivity?
@@ -65,19 +66,23 @@ Valheim dedicated server requires at least 2 CPUs and 4GB RAM.
 - Easy to snapshot for backups
 - Tied to AWS, harder to migrate to a new server
 
+#### Static root volume
+
+- Easiest to set up
+- Snapshottable
+- Harder to migrate/backup in case of e.g. changing to new spot
+
 ### Control scheme
 
 #### Orchestration/configuration
 
-Ansible?
+Ansible and manual deployment?
 
-use LGSM for deployment? https://linuxgsm.com/lgsm/vhserver/
+use LGSM for deployment/management? https://linuxgsm.com/lgsm/vhserver/
 
-use an existing docker deployment? https://github.com/lloesche/valheim-server-docker (or many others)
+use an existing docker container? https://github.com/lloesche/valheim-server-docker (or many others)
 
-Nimdy's installation? https://github.com/Nimdy/Dedicated_Valheim_Server_Script
-
-https://aws.amazon.com/about-aws/whats-new/2020/01/amazon-ec2-spot-instances-stopped-started-similar-to-on-demand-instances/
+Nimdy's installation scripts? https://github.com/Nimdy/Dedicated_Valheim_Server_Script
 
 #### Necessary scripts if building myself
 
