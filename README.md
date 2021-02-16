@@ -103,3 +103,41 @@ Nimdy's installation scripts? https://github.com/Nimdy/Dedicated_Valheim_Server_
   - Update server
   - Wrapper: save world, take down (pre-emption response)
   - Wrapper: save world, take down, update, start (update)
+
+## Setup notes
+
+Set up a vpc with public subnet in us-west-2b
+
+provision a spot instance (m5.large) with a 20gb EBS attached as root volume at start. Request type = maintain
+
+use keypair valheim.pem
+
+create and associate elastic IP
+
+Set up backup lifecycle policy for EBS volume (4h/4d) (TODO: just use rsync backups of world moving forward rather than whole volume snapshots)
+
+Log in and apt-get update/upgrade
+
+install vhserver dependencies
+
+```
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install curl wget file tar bzip2 gzip unzip bsdmainutils python util-linux ca-certificates binutils bc jq tmux netcat lib32gcc1 lib32stdc++6 steamcmd libsdl2-2.0-0:i386
+```
+
+create server user (with a server password)
+
+```
+sudo adduser vhserver
+su - vhserver
+```
+
+use lgsm to install vhserver
+
+```
+wget -O linuxgsm.sh https://linuxgsm.sh && chmod +x linuxgsm.sh && bash linuxgsm.sh vhserver
+./vhserver install
+```
+
+edit configs in /home/vhserver/lgsm/config-lgsm/vhserver
