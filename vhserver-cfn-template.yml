@@ -41,7 +41,7 @@ Parameters:
     MaxValue: 0.15 # Control for spot bid cost so that we dont accidentally bid a huge value.
     MinValue: 0.001
   ServerExpiryDate:
-    Description: 
+    Description: Date until which the spot request will expire
     Type: String
     Default: "2050-01-01T01:00:00Z"
 
@@ -197,9 +197,9 @@ Resources:
     Properties:
       Domain: vpc
       InstanceId: !Ref VHServerInstance
-    Tags:
-      - Key: Application
-        Value: !Ref 'AWS::StackId'
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
   InstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -213,6 +213,7 @@ Resources:
   VHInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
+      VpcId: !Ref VPC
       GroupDescription: Enable Valheim dedicated server access on default port (2457 +/-1)
       SecurityGroupIngress:
         - IpProtocol: udp
@@ -226,9 +227,9 @@ Resources:
       LaunchTemplateData:
         InstanceType: !Ref InstanceType
         KeyName: !Ref KeyName
-        SecurityGroups:
-        - !Ref InstanceSecurityGroup
-        - !Ref VHInstanceSecurityGroup
+        SecurityGroupIds:
+        - !GetAtt InstanceSecurityGroup.GroupId
+        - !GetAtt VHInstanceSecurityGroup.GroupId
         ImageId: !FindInMap [ RegionMap, !Ref "AWS::Region", HVM64 ]
         InstanceMarketOptions:
           MarketType: spot
@@ -253,8 +254,12 @@ Resources:
     Type: AWS::EC2::Instance
     DependsOn:
     - VHServerLaunchTemplate
+    - AttachGateway
     Properties:
-      LaunchTemplate: VHServerLaunchTemplate
+      LaunchTemplate:
+        LaunchTemplateId: !Ref VHServerLaunchTemplate
+        Version: !GetAtt VHServerLaunchTemplate.LatestVersionNumber
+      SubnetId: !Ref Subnet
       Tags:
         - Key: Application
           Value: !Ref 'AWS::StackId'
@@ -279,29 +284,29 @@ Resources:
             NoncurrentVersionTransitions:
               - TransitionInDays: '3'
                 StorageClass: GLACIER
+      Tags:
+        - Key: Application
+          Value: !Ref 'AWS::StackId'
+        - Key: Purpose
+          Value: valheim-backup
     DeletionPolicy: Retain
-    Tags:
-      - Key: Application
-        Value: !Ref 'AWS::StackId'
-      - Key: Purpose
-        Value: valheim-backup
 
 Outputs:
   StackName:
     Value: !Ref "AWS::StackName"
   StackID:
     Value: !Ref "AWS::StackId"
-  VHInstanceDNS:
-    Value: !GetAtt VHInstance.PublicDnsName
   BackupBucketARN:
-    Value: !GetAtt S3BackupBucket:Arn
+    Value: !GetAtt S3BackupBucket.Arn
   BackupBucketURL:
-    Value: !GetAtt S3BackupBucket:DomainName
-
+    Value: !GetAtt S3BackupBucket.DomainName
+  VHInstanceIP:
+    Description: Server Public IP
+    Value: !GetAtt Server.PublicIp
 
 # use Amazon Linux 2 (64-bit x86)
 # These can be replaced for the regions or OS types you need
- Mappings:
+Mappings:
   RegionMap:
     us-east-1:
       HVM64: ami-032930428bf1abbff 

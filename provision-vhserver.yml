@@ -7,8 +7,8 @@
   vars:
     region: us-west-2 # change if necessary. See regions in mapping section at the bottom of cfn-template.yml
     instance_type: m5.large
-    keypair: ######TODO
-    ssh_location: ######TODO
+    keypair: valheim
+    ssh_location: 71.227.161.7
     stack_name: vhserver-cfn
     spot_bid: 0.09
     server_expiry_date: "2050-01-01T01:00:00Z"
@@ -33,15 +33,18 @@ tasks:
     amazon.aws.cloudformation_info:
       stack_name: "{{ stack_name }}"
     register: stack_outputs
+  - name: Display stack construction outputs
+    ansible.builtin.debug:
+    var: stack_output
   - name: Add server instance to inventory
     add_host:
-      name: "{{ stack_outputs.VHInstanceDNS }}"
+      name: "{{ stack_outputs.VHInstanceIP }}"
       ansible_user: ec2-user
       host_key_checking: false
       groups: "aws"
     no_log: true
-    when: stack_outputs
-  - name: 
+    when: stack_outputs is defined
+
       
     
     
