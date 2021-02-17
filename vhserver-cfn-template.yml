@@ -43,7 +43,7 @@ Parameters:
   ServerExpiryDate:
     Description: 
     Type: String
-    Default: 2050-01-01T01:00:00Z
+    Default: "2050-01-01T01:00:00Z"
 
 # RESOURCES
 
@@ -189,7 +189,8 @@ Resources:
   # Snag an elastic IP.
   ElasticIPAddress:
     Type: 'AWS::EC2::EIP'
-    DependsOn: AttachGateway
+    DependsOn: 
+    - AttachGateway
     # Note: This will not be deleted on stack deletion in case you need to recreate stack and migrate the server
     # Unassociated IPs (after stack deletion) will incur a very small charge so delete this if it's no longer needed
     DeletionPolicy: Retain
@@ -212,7 +213,7 @@ Resources:
   VHInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable Web/SSH Access
+      GroupDescription: Enable Valheim dedicated server access on default port (2457 +/-1)
       SecurityGroupIngress:
         - IpProtocol: udp
           FromPort: '2456'
@@ -274,7 +275,7 @@ Resources:
         Rules:
           - Id: GlacierRule
             Status: Enabled
-            NoncurrentVersionExpirationInDays: '30'
+            NoncurrentVersionExpirationInDays: '15'
             NoncurrentVersionTransitions:
               - TransitionInDays: '3'
                 StorageClass: GLACIER

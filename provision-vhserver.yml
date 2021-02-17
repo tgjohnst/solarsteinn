@@ -10,9 +10,11 @@
     keypair: ######TODO
     ssh_location: ######TODO
     stack_name: vhserver-cfn
-
+    spot_bid: 0.09
+    server_expiry_date: "2050-01-01T01:00:00Z"
+  
 tasks:
-- name: Create VHServer stack
+  - name: Create VHServer stack
     cloudformation:
       stack_name: "{{ stack_name }}"
       region: "{{ region }}"
@@ -23,17 +25,23 @@ tasks:
         KeyName: "{{ keypair }}"
         InstanceType: "{{ instance_type }}"
         SSHLocation: "{{ ssh_location }}"
+        SpotBid: "{{ spot_bid }}"
+        ServerExpiryDate: "{{ server_expiry_date }}"
       tags:
         stack: "{{ stack_name }}"
-- name: Get ec2 instances info
-  ec2_instance_info:
-    region: "{{ region }}"
-    filters:
-      "tag:stack": "{{ stack_name }}"
-      instance-state-name: [ "running" ]
-  register: ec2_list
-  
-  
-  
-  
-  
+  - name: Get cloudformation outputs
+    amazon.aws.cloudformation_info:
+      stack_name: "{{ stack_name }}"
+    register: stack_outputs
+  - name: Add server instance to inventory
+    add_host:
+      name: "{{ stack_outputs.VHInstanceDNS }}"
+      ansible_user: ec2-user
+      host_key_checking: false
+      groups: "aws"
+    no_log: true
+    when: stack_outputs
+  - name: 
+      
+    
+    
