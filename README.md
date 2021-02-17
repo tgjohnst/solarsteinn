@@ -5,6 +5,9 @@ Sólarsteinn is a framework for running a Valheim dedicated server on pre-emptib
 The goal is to get an affordable, automated, and stable dedicated server running on public clouds that competes in cost with dedicated server offerings from game companies. It's relatively easy to get a dedicated server set up on a unix host, but on-demand pricing for a capable enough server is high ($40+ a month). One way to get around that is to use spot instances, which vary in price based on bids on extra capacity. For a spot-based server, the server has to gracefully handle shutdowns and restarts.
 
 This server should:
+
+- Be completely automated to set up / configure
+
 - Cost the same or less than equivalent dedicated servers from game hosting companies
 - Stably support up to 10 players for a reasonable amount of playtime (~8h) per day
 - Have some mechanism to backup data on a regular basis
@@ -108,7 +111,7 @@ Nimdy's installation scripts? https://github.com/Nimdy/Dedicated_Valheim_Server_
 
 Set up a vpc with public subnet in us-west-2b
 
-provision a spot instance (m5.large) with a 20gb EBS attached as root volume at start. Request type = maintain
+provision a spot instance (m5.large) with a 20gb EBS attached as root volume at start. Persistent.
 
 use keypair valheim.pem
 
@@ -120,10 +123,21 @@ Log in and apt-get update/upgrade
 
 install vhserver dependencies
 
+Ubuntu
+
 ```
 sudo dpkg --add-architecture i386
 sudo apt update
-sudo apt install curl wget file tar bzip2 gzip unzip bsdmainutils python util-linux ca-certificates binutils bc jq tmux netcat lib32gcc1 lib32stdc++6 steamcmd libsdl2-2.0-0:i386
+sudo apt install -y curl wget file tar bzip2 gzip unzip bsdmainutils python util-linux ca-certificates binutils bc jq tmux netcat lib32gcc1 lib32stdc++6 steamcmd libsdl2-2.0-0:i386
+sudo apt install -y rclone
+```
+
+Centos/awslinux
+
+```
+yum install -y epel-release
+yum install -y curl wget tar bzip2 gzip unzip python3 binutils bc jq tmux glibc.i686 libstdc++ libstdc++.i686
+yum install -y rclone
 ```
 
 create server user (with a server password)
@@ -141,3 +155,16 @@ wget -O linuxgsm.sh https://linuxgsm.sh && chmod +x linuxgsm.sh && bash linuxgsm
 ```
 
 edit configs in /home/vhserver/lgsm/config-lgsm/vhserver
+
+
+
+
+
+### references
+
+#### vpc and server
+
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/sample-templates-services-us-west-2.html#w2ab1c35c58c13c41
+
+https://muhannad0.github.io/post/cloudformation-and-ansible-provision-and-configure/
+
