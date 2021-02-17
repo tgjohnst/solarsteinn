@@ -301,8 +301,8 @@ Outputs:
   BackupBucketURL:
     Value: !GetAtt S3BackupBucket.DomainName
   VHInstanceIP:
-    Description: Server Public IP
-    Value: !GetAtt Server.PublicIp
+    Description: Valheim Server Public IP
+    Value: !GetAtt VHServerInstance.PublicIp
 
 # use Amazon Linux 2 (64-bit x86)
 # These can be replaced for the regions or OS types you need
