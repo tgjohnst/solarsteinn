@@ -1,7 +1,45 @@
-# Sólarsteinn
-Sólarsteinn is a framework for running a Valheim dedicated server on pre-emptible public cloud instances (AWS Spot). The word refers to the legendary sunstones, which the vikings supposedly used to find the sun through clouds while navigating under a completely overcast sky. 
+![Solarsteinn Logo](images/solarsteinn_logo.jpg)
+
+**Sólarsteinn** is a framework for running a **Valheim** dedicated server on pre-emptible public cloud instances (AWS Spot). It consists of an Ansible playbook and a CloudFormation Template that can get a Valheim server (and associated infrastructure) up and running with one click!
+
+The word Sólarsteinn (Icelandic) refers to the legendary sunstones, which the vikings supposedly used to find the sun through clouds while navigating under a completely overcast sky. 
+
+## Basic Architecture
+
+The CloudFormation template used by Sólarsteinn will set up not only a server, but an entire VPC (virtual private cloud) and all of the requisite networking infrastructure required to run and secure it. It also creates an S3 storage bucket for world backups and an elastic IP - both of these are retained upon deletion for ease of server migration or updates.
+
+![Sólarsteinn Valheim Server Stack](images/vhserver-cfn-stack.jpg)
+
+
+
+## How to run Solarsteinn on AWS
+
+**Important Disclaimer:** Creating resources and using bandwidth in AWS will incur monetary charges. Although this is optimized to reduce cost, you are running this tool at your own risk and expense! Additionally, this stack implements some basic security measures, but you are responsible for maintaining the security of your own server(s).
+
+### Prior to running Solarsteinn
+
+
+
+#### Creating an AWS account
+
+In order to run Solarsteinn, you'll need an AWS account. If you're reading this guide and don't happen to have AWS experience, you can follow Amazon's [guide to setting up an AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/). 
+
+There are many basic security practices that should be followed when using AWS. One of them is never to use your root keypair. Please use an [IAM user keypair](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html) with the appropriate permissions (TODO) to run the various components of this framework.
+
+#### Prerequisites
+
+In order to create and connect to the server, you'll need the following already set up:
+
+- A public-private SSH keypair
+  - This has to be either created in AWS or registered with AWS - please follow the [AWS guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) with the method you're most comfortable with, and keep your keypair private/safe.
+- A local installation of the prequisite applications and libraries. I'd recommend using [miniforge](https://github.com/conda-forge/miniforge) to install the following:
+  - Ansible
+  - AWSCLI
+
+
 
 ## Goals: 
+
 The goal is to get an affordable, automated, and stable dedicated server running on public clouds that competes in cost with dedicated server offerings from game companies. It's relatively easy to get a dedicated server set up on a unix host, but on-demand pricing for a capable enough server is high ($40+ a month). One way to get around that is to use spot instances, which vary in price based on bids on extra capacity. For a spot-based server, the server has to gracefully handle shutdowns and restarts.
 
 This server should:
@@ -17,6 +55,7 @@ This server should:
 - Automate part-time uptime
 
 ## Current competing STC/STG offerings:
+
 *TODO make this into a table*
 - CitadelServers
 - SecretServers
@@ -57,26 +96,6 @@ Valheim dedicated server requires at least 2 CPUs and 4GB RAM.
 
 
 ## Architecture
-### Containerization vs. static volume
-#### Containers
-- May be annoying to update
-- I don't like docker ughhhhh but I guess I should
-- Carry additional performance/space overhead. 
-- Easier to migrate to other services/hosts
-- Easier to orchestrate through pre-emptions/downtime without custom devops scripting.
-
-#### Static volume attached to instance
-- Easy to attach/detach 
-- Easy to snapshot for backups
-- Tied to AWS, harder to migrate to a new server
-- Base AMI will have to be routinely updated with dependencies (necessitating packer and $$ for AMI storage)
-
-#### Static root volume
-
-- Easiest to set up
-- Snapshottable
-- Harder to migrate, necessitating new setups
-
 ### Control scheme
 
 #### Orchestration/configuration
@@ -119,7 +138,7 @@ create and associate elastic IP
 
 Set up backup lifecycle policy for EBS volume (4h/4d) (TODO: just use rsync backups of world moving forward rather than whole volume snapshots)
 
-Log in and apt-get update/upgrade
+Log in and apt-get/yum update/upgrade
 
 install vhserver dependencies
 
@@ -135,9 +154,11 @@ sudo apt install -y rclone
 Centos/awslinux
 
 ```
+# as su (ansible)
 yum install -y epel-release
 yum install -y curl wget tar bzip2 gzip unzip python3 binutils bc jq tmux glibc.i686 libstdc++ libstdc++.i686
 yum install -y rclone
+yum install -y 
 ```
 
 create server user (with a server password)
@@ -150,39 +171,17 @@ su - vhserver
 use lgsm to install vhserver
 
 ```
-wget -O linuxgsm.sh https://linuxgsm.sh && chmod +x linuxgsm.sh && bash linuxgsm.sh vhserver
-./vhserver install
+wget -O linuxgsm.sh https://linuxgsm.sh
+chmod +x linuxgsm.sh
+bash linuxgsm.sh vhserver
+./vhserver auto-install
 ```
 
 edit configs in /home/vhserver/lgsm/config-lgsm/vhserver
 
-## Setup notes for running solarsteinn on a greengrass acct
-
-### Prior to running Solarsteinn
-
-**Disclaimer:** Creating resources and using bandwidth in AWS will incur monetary charges. You are running this tool at your own risk! Additionally, this stack implements some basic security measures, but you are responsible for maintaining the security of your own server(s).
-
-#### Creating an AWS account
-
-In order to run Solarsteinn, you'll need an AWS account. If you're reading this guide and don't happen to have AWS experience, you can follow Amazon's [guide to setting up an AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/). 
-
-There are many basic security practices that should be followed when using AWS. One of them is never to use your root keypair. Please use an [IAM user keypair](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html) with the appropriate permissions (TODO) to run the various components of this framework.
-
-#### Prerequisites
-
-In order to create and connect to the server, you'll need the following already set up:
-
-- A public-private SSH keypair
-  - This has to be either created in AWS or registered with AWS - please follow the [AWS guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) with the method you're most comfortable with, and keep your keypair private/safe.
-- 
 
 
-
-
-
-
-
-### references
+### References
 
 #### vpc and server
 
