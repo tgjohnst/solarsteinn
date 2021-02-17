@@ -8,6 +8,7 @@ Description: >-
   The following will be (purposefully) retained on stack deletion and have to be deleted manually
     1. S3 bucket
     2. Elastic IP
+  Note that the S3 bucket is versioned, and set to automatically glaciate older backups after 3 days and delete older backups after 30 days
 Parameters:
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
@@ -237,10 +238,17 @@ Resources:
   S3BackupBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      AccessControl: PublicRead
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: error.html
+      AccessControl: Private
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: GlacierRule
+            Status: Enabled
+            NoncurrentVersionExpirationInDays: '30'
+            NoncurrentVersionTransitions:
+              - TransitionInDays: '3'
+                StorageClass: GLACIER
     DeletionPolicy: Retain
     Tags:
       - Key: Application

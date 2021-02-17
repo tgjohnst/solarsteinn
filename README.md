@@ -156,6 +156,28 @@ wget -O linuxgsm.sh https://linuxgsm.sh && chmod +x linuxgsm.sh && bash linuxgsm
 
 edit configs in /home/vhserver/lgsm/config-lgsm/vhserver
 
+## Setup notes for running solarsteinn on a greengrass acct
+
+### Prior to running Solarsteinn
+
+**Disclaimer:** Creating resources and using bandwidth in AWS will incur monetary charges. You are running this tool at your own risk! Additionally, this stack implements some basic security measures, but you are responsible for maintaining the security of your own server(s).
+
+#### Creating an AWS account
+
+In order to run Solarsteinn, you'll need an AWS account. If you're reading this guide and don't happen to have AWS experience, you can follow Amazon's [guide to setting up an AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/). 
+
+There are many basic security practices that should be followed when using AWS. One of them is never to use your root keypair. Please use an [IAM user keypair](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html) with the appropriate permissions (TODO) to run the various components of this framework.
+
+#### Prerequisites
+
+In order to create and connect to the server, you'll need the following already set up:
+
+- A public-private SSH keypair
+  - This has to be either created in AWS or registered with AWS - please follow the [AWS guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) with the method you're most comfortable with, and keep your keypair private/safe.
+- 
+
+
+
 
 
 
