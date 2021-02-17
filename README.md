@@ -4,6 +4,12 @@
 
 The word Sólarsteinn (Icelandic) refers to the legendary sunstones, which the vikings supposedly used to find the sun through clouds while navigating under a completely overcast sky. 
 
+## Project Status
+
+The CloudFormation template is currently fully tested and working! This will create the bare server, though without Valheim dedicated server installed or configured.
+
+I am currently working on the ansible playbooks to install, configure, and control the dedicated server itself.
+
 ## Basic Architecture
 
 The CloudFormation template used by Sólarsteinn will set up not only a server, but an entire VPC (virtual private cloud) and all of the requisite networking infrastructure required to run and secure it. It also creates an S3 storage bucket for world backups and an elastic IP - both of these are retained upon deletion for ease of server migration or updates.
