@@ -1,0 +1,39 @@
+# provision-vhsesrver.yaml
+---
+- name: Provision VHServer AWS stack
+  hosts: localhost
+  gather_facts: false #TODO may have to gather facts for automated IP detection
+  connection: local
+  vars:
+    region: us-west-2 # change if necessary. See regions in mapping section at the bottom of cfn-template.yml
+    instance_type: m5.large
+    keypair: ######TODO
+    ssh_location: ######TODO
+    stack_name: vhserver-cfn
+
+tasks:
+- name: Create VHServer stack
+    cloudformation:
+      stack_name: "{{ stack_name }}"
+      region: "{{ region }}"
+      disable_rollback: true
+      state: present
+      template: "vhserver-cfn-template.yml"
+      template_parameters:
+        KeyName: "{{ keypair }}"
+        InstanceType: "{{ instance_type }}"
+        SSHLocation: "{{ ssh_location }}"
+      tags:
+        stack: "{{ stack_name }}"
+- name: Get ec2 instances info
+  ec2_instance_info:
+    region: "{{ region }}"
+    filters:
+      "tag:stack": "{{ stack_name }}"
+      instance-state-name: [ "running" ]
+  register: ec2_list
+  
+  
+  
+  
+  
