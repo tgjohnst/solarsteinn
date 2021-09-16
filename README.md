@@ -1,14 +1,10 @@
 ![Solarsteinn Logo](images/solarsteinn_logo.jpg)
 
-**Sólarsteinn** is a framework for running a **Valheim** dedicated server on pre-emptible public cloud instances (AWS Spot). It consists of an Ansible playbook and a CloudFormation Template that can get a Valheim server (and associated infrastructure) up and running with one click!
+**Sólarsteinn** is a framework for running a **Valheim** dedicated server on pre-emptible public cloud instances (AWS Spot). It will consist of an Ansible playbook and a CloudFormation Template that can get a Valheim server (and associated infrastructure) up and running on a clean AWS account with one click! 
+
+**Current progress:** The CloudFormation template, which brings up the server instance and all necessary infrastructure, is complete and tested working - you can use it freely to bring up a bare server. The server configuration playbook is not complete, and I've paused development due to time constraints, so installation and configuration of Valheim Dedicated Server is currently up to the user. I may revisit this project in the future as a more generalized, valheim-independent way to spin up a dedicated server.
 
 The word Sólarsteinn (Icelandic) refers to the legendary sunstones, which the vikings supposedly used to find the sun through clouds while navigating under a completely overcast sky. 
-
-## Project Status
-
-The CloudFormation template is currently fully tested and working! This will create the bare server, though without Valheim dedicated server installed or configured.
-
-I am currently working on the ansible playbooks to install, configure, and control the dedicated server itself.
 
 ## Basic Architecture
 
